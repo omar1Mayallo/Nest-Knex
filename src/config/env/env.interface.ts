@@ -10,4 +10,5 @@ export interface IEnvironmentVariables {
   DB_USER: string;
   DB_PASSWORD: string;
   DB_DATABASE: string;
+  FALLBACK_LANGUAGE: string;
 }

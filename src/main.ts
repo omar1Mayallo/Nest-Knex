@@ -6,8 +6,8 @@ import * as compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { IEnvironmentVariables } from './config/env/env.interface';
 import { EnvironmentVariables } from './config/env/env.schema';
+import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
 
 (async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -15,7 +15,7 @@ import { EnvironmentVariables } from './config/env/env.schema';
   // [1] CORS | https://docs.nestjs.com/security/cors#getting-started
   app.enableCors();
   // [2] HELMET | https://helmetjs.github.io/
-  app.use(helmet);
+  app.use(helmet());
   // [3] RATE_LIMITER | https://www.npmjs.com/package/express-rate-limit
   app.use(
     rateLimit({
@@ -27,7 +27,12 @@ import { EnvironmentVariables } from './config/env/env.schema';
   app.use(compression());
 
   // ____________ EXCEPTIONS_FILTERS_&_VALIDATION_PIPS ____________ //
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(
+    new I18nValidationPipe({ whitelist: true, transform: true }),
+  );
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({ detailedErrors: false }),
+  );
 
   // ____________ ACCESS_APP_CONFIGS ____________ //
   const configService = app.get(ConfigService<EnvironmentVariables>);
@@ -39,8 +44,11 @@ import { EnvironmentVariables } from './config/env/env.schema';
   // [2] App Port and Domain
   const port = configService.get<number>('APP_PORT');
   const serverDomain = configService.get<string>('SERVER_DOMAIN');
+  const mode = configService.get<string>('NODE_ENV');
 
   await app.listen(port, () => {
-    Logger.verbose(`Application run on ${`${serverDomain}/${globalPrefix}`}`);
+    Logger.verbose(
+      `App run on ${`${serverDomain}/${globalPrefix} in ${mode} mode`}`,
+    );
   });
 })();

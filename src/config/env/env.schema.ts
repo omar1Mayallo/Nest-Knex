@@ -25,6 +25,8 @@ export class EnvironmentVariables implements IEnvironmentVariables {
     require_tld: false,
   })
   SERVER_DOMAIN: string = 'http://localhost:3000';
+  @IsString()
+  FALLBACK_LANGUAGE: string = 'en';
 
   // #DATABASE
   @IsString()
