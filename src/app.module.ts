@@ -7,7 +7,6 @@ import { I18nCustomModule } from './shared/modules/I18n-custom/I18n-custom.modul
 
 @Module({
   imports: [
-    UsersModule,
     // ENV_CONFIGURATIONS_MODULE
     ConfigModule.forRoot(ConfigOptions),
 
@@ -16,6 +15,9 @@ import { I18nCustomModule } from './shared/modules/I18n-custom/I18n-custom.modul
 
     // I18N_MODULE
     I18nCustomModule,
+
+    // ______ APP_MODULES ______ //
+    UsersModule,
   ],
   controllers: [],
   providers: [],

@@ -2,16 +2,16 @@ import { Knex } from 'knex';
 import { TABLES } from '../../shared/constants/tables';
 
 export async function up(knex: Knex): Promise<void> {
-  return await knex.schema.createTable(TABLES.USER_ROLES, (table) => {
+  return await knex.schema.createTable(TABLES.GROUP_ROLES, (table) => {
     // PK
     table.increments('id').primary();
 
     // INFO
     table
-      .integer('user_id')
+      .integer('group_id')
       .unsigned()
       .references('id')
-      .inTable(TABLES.USERS)
+      .inTable(TABLES.GROUP)
       .onDelete('CASCADE');
     table
       .integer('role_id')
@@ -26,5 +26,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  return await knex.schema.dropTable(TABLES.USER_ROLES);
+  return await knex.schema.dropTable(TABLES.GROUP);
 }

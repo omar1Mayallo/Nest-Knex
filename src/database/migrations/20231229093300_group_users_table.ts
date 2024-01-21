@@ -2,25 +2,29 @@ import { Knex } from 'knex';
 import { TABLES } from '../../shared/constants/tables';
 
 export async function up(knex: Knex): Promise<void> {
-  return await knex.schema.createTable(TABLES.ROLES_PERMISSIONS, (table) => {
+  return await knex.schema.createTable(TABLES.GROUP_USERS, (table) => {
+    // PK
     table.increments('id').primary();
+
+    // INFO
     table
-      .integer('role_id')
+      .integer('user_id')
       .unsigned()
       .references('id')
-      .inTable('roles')
+      .inTable(TABLES.USERS)
       .onDelete('CASCADE');
     table
-      .integer('permission_id')
+      .integer('group_id')
       .unsigned()
       .references('id')
-      .inTable('permissions')
+      .inTable(TABLES.GROUP)
       .onDelete('CASCADE');
-    // Ensure that each combination of role_id and permission_id is unique
-    table.unique(['role_id', 'permission_id']);
+
+    // TIMESTAMPS
+    table.timestamps(true, true);
   });
 }
 
 export async function down(knex: Knex): Promise<void> {
-  return await knex.schema.dropTable(TABLES.ROLES_PERMISSIONS);
+  return await knex.schema.dropTable(TABLES.GROUP_USERS);
 }

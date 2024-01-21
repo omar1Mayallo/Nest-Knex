@@ -20,7 +20,7 @@ import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
   app.use(
     rateLimit({
       windowMs: 60 * 60 * 1000, // 1 Hour
-      max: 500, // limit each IP to 500 requests per windowMs
+      max: 1000, // limit each IP to 1000 requests per windowMs
     }),
   );
   // [4] COMPRESSION | https://www.npmjs.com/package/compression
@@ -31,7 +31,7 @@ import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
     new I18nValidationPipe({ whitelist: true, transform: true }),
   );
   app.useGlobalFilters(
-    new I18nValidationExceptionFilter({ detailedErrors: false }),
+    new I18nValidationExceptionFilter({ detailedErrors: true }),
   );
 
   // ____________ ACCESS_APP_CONFIGS ____________ //
@@ -43,7 +43,7 @@ import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
   app.setGlobalPrefix(globalPrefix);
   // [2] App Port and Domain
   const port = configService.get<number>('APP_PORT');
-  const serverDomain = configService.get<string>('SERVER_DOMAIN');
+  const serverDomain = configService.get<string>('SERVER_URL');
   const mode = configService.get<string>('NODE_ENV');
 
   await app.listen(port, () => {

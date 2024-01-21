@@ -4,7 +4,7 @@ export interface IEnvironmentVariables {
   NODE_ENV: Environment;
   APP_PORT: number;
   API_PREFIX: string;
-  SERVER_DOMAIN: string;
+  SERVER_URL: string;
   DB_HOST: string;
   DB_PORT: number;
   DB_USER: string;

@@ -3,8 +3,17 @@ import { TABLES } from '../../shared/constants/tables';
 
 export async function up(knex: Knex): Promise<void> {
   return await knex.schema.createTable(TABLES.ROLES, (table) => {
+    // PK
     table.increments('id').primary();
-    table.string('name').notNullable().unique();
+
+    // INFO
+    table.string('name', 100).notNullable().unique();
+    table.string('description', 255).nullable();
+    table.string('status', 50).notNullable();
+    table.string('type', 50);
+
+    // TIMESTAMPS
+    table.timestamps(true, true);
   });
 }
 

@@ -12,6 +12,7 @@ export const I18NConfigsOptions: I18nAsyncOptions = {
     loaderOptions: {
       path: 'src/i18n',
       watch: true,
+      includeSubfolders: true,
     },
   }),
   resolvers: [
