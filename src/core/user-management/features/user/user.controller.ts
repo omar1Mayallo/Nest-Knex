@@ -2,7 +2,7 @@ import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { I18nCustomService } from 'src/shared/modules/I18n-custom/I18n-custom.service';
 
 @Controller('users')
-export class UsersController {
+export class UserController {
   constructor(private readonly i18n: I18nCustomService) {}
   // @DESC: Create A User
   // @URL: POST => "/"

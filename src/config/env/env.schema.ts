@@ -39,4 +39,10 @@ export class EnvironmentVariables implements IEnvironmentVariables {
   DB_PASSWORD: string = 'password';
   @IsString()
   DB_DATABASE: string = 'db_name';
+
+  // #JWT
+  @IsString()
+  JWT_SECRET: string = 'your-jwt-secret';
+  @IsString()
+  JWT_EXPIRATION_DATE: string = '1d';
 }

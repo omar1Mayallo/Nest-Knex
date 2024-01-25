@@ -1,13 +1,15 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import { I18nValidationPipe } from 'nestjs-i18n';
 import { AppModule } from './app.module';
 import { EnvironmentVariables } from './config/env/env.schema';
-import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
+import { CustomI18nValidationExceptionFilter } from './shared/exceptions/Custom-i18n-exception-filter';
+import { i18nExceptionFilterOptions } from './shared/exceptions/i18nExceptionFilterOptions';
 
 (async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -26,12 +28,15 @@ import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
   // [4] COMPRESSION | https://www.npmjs.com/package/compression
   app.use(compression());
 
-  // ____________ EXCEPTIONS_FILTERS_&_VALIDATION_PIPS ____________ //
+  // ____________ VALIDATION_PIPS ____________ //
   app.useGlobalPipes(
-    new I18nValidationPipe({ whitelist: true, transform: true }),
+    new I18nValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
   );
   app.useGlobalFilters(
-    new I18nValidationExceptionFilter({ detailedErrors: true }),
+    new CustomI18nValidationExceptionFilter(i18nExceptionFilterOptions),
   );
 
   // ____________ ACCESS_APP_CONFIGS ____________ //
