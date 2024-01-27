@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigOptions } from './config/env/env.config';
-import { AuthModule } from './core/user-management/features/auth/auth.module';
-import { GroupModule } from './core/user-management/features/group/group.module';
-import { PermissionsModule } from './core/user-management/features/permissions/permissions.module';
-import { RoleModule } from './core/user-management/features/role/role.module';
-import { UserModule } from './core/user-management/features/user/user.module';
 import { DatabaseModule } from './database/database.module';
 import { I18nCustomModule } from './shared/modules/I18n-custom/I18n-custom.module';
 import { CustomHelpersModule } from './shared/modules/custom-helpers/custom-helpers.module';
+import { UserModule } from './core/user-management/features/user-manager/user/user.module';
+import { AuthModule } from './core/user-management/features/user-manager/auth/auth.module';
+import { RoleModule } from './core/user-management/features/role-manager/role/role.module';
+import { GroupModule } from './core/user-management/features/group-manager/group/group.module';
+import { RepositoryModule } from './shared/modules/repository/repository.module';
 
 @Module({
   imports: [
+    // ______ BASE_CONFIGURATIONS_MODULES ______ //
     // ENV_CONFIGURATIONS_MODULE [Global]
     ConfigModule.forRoot(ConfigOptions),
 
@@ -21,14 +22,16 @@ import { CustomHelpersModule } from './shared/modules/custom-helpers/custom-help
     // I18N_MODULE [Global]
     I18nCustomModule,
 
-    // HELPERS [Global]
+    // HELPERS_MODULE [Global]
     CustomHelpersModule,
+
+    // REPOSITORY_MODULE [Global]
+    RepositoryModule,
 
     // ______ APP_MODULES ______ //
     UserModule,
     AuthModule,
     RoleModule,
-    PermissionsModule,
     GroupModule,
   ],
   controllers: [],

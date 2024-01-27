@@ -14,6 +14,7 @@ export const I18NConfigsOptions: I18nAsyncOptions = {
       watch: true,
       includeSubfolders: true,
     },
+    typesOutputPath: 'src/generated/i18n.generated.ts',
   }),
   resolvers: [
     { use: QueryResolver, options: ['lang'] },

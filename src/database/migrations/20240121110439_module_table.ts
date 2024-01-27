@@ -12,10 +12,11 @@ export async function up(knex: Knex): Promise<void> {
     table.string('en_name').notNullable();
     table.string('source').notNullable();
     table
-      .integer('parent_module_id')
-      .unsigned()
-      .references('id')
-      .inTable(TABLES.MODULE);
+      .string('parent_key')
+      .references('module_key')
+      .inTable(TABLES.MODULE)
+      .onDelete('RESTRICT')
+      .onUpdate('CASCADE');
 
     // TIMESTAMPS
     table.timestamps(true, true);

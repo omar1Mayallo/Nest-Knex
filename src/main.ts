@@ -8,8 +8,8 @@ import helmet from 'helmet';
 import { I18nValidationPipe } from 'nestjs-i18n';
 import { AppModule } from './app.module';
 import { EnvironmentVariables } from './config/env/env.schema';
-import { CustomI18nValidationExceptionFilter } from './shared/exceptions/Custom-i18n-exception-filter';
-import { i18nExceptionFilterOptions } from './shared/exceptions/i18nExceptionFilterOptions';
+import { CustomI18nValidationExceptionFilter } from './config/errors/Custom-i18n-exception-filter';
+import { i18nExceptionFilterOptions } from './config/errors/i18nExceptionFilterOptions';
 
 (async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

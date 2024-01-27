@@ -7,20 +7,14 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('id').primary();
 
     // INFO
+    table.string('email').references('email').inTable(TABLES.USERS);
+
     table
-      .integer('user_id')
-      .unsigned()
-      .references('id')
-      .inTable(TABLES.USERS)
-      .onDelete('CASCADE')
-      .notNullable();
-    table
-      .integer('action_id')
-      .unsigned()
-      .references('id')
+      .string('action_key')
+      .references('action_key')
       .inTable(TABLES.ENTITY_ACTION)
-      .onDelete('CASCADE')
-      .notNullable();
+      .onDelete('RESTRICT')
+      .onUpdate('CASCADE');
 
     // TIMESTAMPS
     table.timestamps(true, true);

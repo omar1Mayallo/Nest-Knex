@@ -10,13 +10,13 @@ export async function up(knex: Knex): Promise<void> {
     table.string('action_key').notNullable().unique();
     table.string('en_name').notNullable();
     table.string('ar_name').notNullable();
-    table
-      .integer('entity_id')
-      .unsigned()
-      .references('id')
-      .inTable(TABLES.ENTITY)
-      .notNullable();
     table.string('action_category'); // CRUD
+    table
+      .string('entity_key')
+      .references('entity_key')
+      .inTable(TABLES.ENTITY)
+      .onDelete('RESTRICT')
+      .onUpdate('CASCADE');
 
     // TIMESTAMPS
     table.timestamps(true, true);

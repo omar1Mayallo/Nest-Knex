@@ -1,3 +1,5 @@
+import { ValueOf } from '../types/custom';
+
 export const TABLES = {
   USERS: 'user',
   ROLES: 'role',
@@ -10,4 +12,13 @@ export const TABLES = {
   ENTITY_ACTION: 'entities_actions',
   USER_ENTITY_ACTION: 'user_entity_actions',
   ROLE_ENTITY_ACTIONS: 'role_entity_actions',
-};
+} as const;
+
+export type TableKeys = ValueOf<typeof TABLES>;
+
+export enum ActionCategory {
+  CREATE = 'CREATE',
+  READ = 'READ',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+}

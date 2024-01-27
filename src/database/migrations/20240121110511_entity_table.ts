@@ -11,13 +11,13 @@ export async function up(knex: Knex): Promise<void> {
     table.string('entity_url').notNullable();
     table.string('ar_name').notNullable();
     table.string('en_name').notNullable();
-    table
-      .integer('module_id')
-      .unsigned()
-      .references('id')
-      .inTable(TABLES.MODULE)
-      .notNullable();
     table.integer('order').notNullable();
+    table
+      .string('module_key')
+      .references('module_key')
+      .inTable(TABLES.MODULE)
+      .onDelete('RESTRICT')
+      .onUpdate('CASCADE');
 
     // TIMESTAMPS
     table.timestamps(true, true);

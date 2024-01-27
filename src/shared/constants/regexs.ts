@@ -24,3 +24,17 @@ Explanation:
 - $: End of the string.
 */
 export const USERNAME_REGEX = /^[a-zA-Z0-9_\u0600-\u06FF]{3,30}$/;
+
+// UNIQUE_VIOLATION_REGEX: Extracts field name and value from PostgreSQL unique constraint violation messages.
+/*
+Explanation:
+- Key \(([^)]+)\): This part matches the field name enclosed in parentheses after the word 'Key'.
+  - The pattern `([^)]+)` captures any sequence of characters except the closing parenthesis `)`.
+- =\(([^)]+)\): This part matches the field value enclosed in parentheses after the equals sign `=`.
+  - Similarly, `([^)]+)` captures any sequence of characters except the closing parenthesis `)`.
+- already exists: Matches the exact text 'already exists' which is part of the PostgreSQL unique violation error message.
+- The entire expression is used to parse error messages like "Key (field)=(value) already exists" and 
+  extracts 'field' and 'value' for use in custom error messages.
+*/
+export const UNIQUE_VIOLATION_REGEX =
+  /Key \(([^)]+)\)=\(([^)]+)\) already exists/;
