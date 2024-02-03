@@ -12,6 +12,7 @@ import { JwtService } from 'src/core/user-management/common/modules/jwt/jwt.serv
 import { TABLES } from 'src/shared/constants/tables';
 import { UserModel } from 'src/shared/types/entities/user-management.model';
 import { UserService } from '../../user/user.service';
+import { RepositoryService } from 'src/shared/modules/repository/repository.service';
 
 export interface AuthRequest extends Request {
   user: UserModel;
@@ -23,6 +24,7 @@ export class AuthGuard implements CanActivate {
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly reflector: Reflector,
+    private readonly repoService: RepositoryService<UserModel>,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -59,9 +61,12 @@ export class AuthGuard implements CanActivate {
     }
 
     // 4) Get logged user
-    const loggedUser = await this.userService.getOneOrFail<UserModel>(
+    const loggedUser = await this.repoService.getOne(
       TABLES.USERS,
-      { id: decodedToken.id },
+      {
+        id: decodedToken.id,
+      },
+      { withNotFoundError: false },
     );
     if (!loggedUser) {
       throw new UnauthorizedException(
@@ -74,8 +79,6 @@ export class AuthGuard implements CanActivate {
     if (isAuthenticationOnly) {
       return true;
     }
-
-    console.log('ssssssssssssssssss');
 
     // 6) Authorization check
     const isUserHaveAccess = await this.userService.verifyPermissions(

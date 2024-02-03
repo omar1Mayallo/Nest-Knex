@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { BcryptModule } from 'src/core/user-management/common/modules/bcrypt/bcrypt.module';
 import { JwtModule } from 'src/core/user-management/common/modules/jwt/jwt.module';
 import { UserModule } from '../user/user.module';

@@ -12,14 +12,14 @@ export class AuthController {
     private readonly i18nService: I18nCustomService,
   ) {}
 
-  // @desc: User Register
+  // @DESC: User Register
   // @url: POST => "auth/register"
   @Post('register')
   async register(@Body() body: CreateUserDTO): Promise<IUserTokenResponse> {
     return await this.authService.register(body);
   }
 
-  // @desc: User Login
+  // @DESC: User Login
   // @url: POST => "auth/login"
   @Post('login')
   @HttpCode(200)
@@ -27,14 +27,14 @@ export class AuthController {
     return await this.authService.login(body);
   }
 
-  // @desc: User Forget Password
+  // @DESC: User Forget Password
   // @url: POST => "auth/forget-password"
   @Post('forget-password')
   async forgetPassword(_: any) {
     console.log('forgetPassword');
   }
 
-  // @desc: User Login With OTP
+  // @DESC: User Login With OTP
   // @url: POST => "auth/login-otp"
   @Post('login-otp')
   async loginWithOtp(_: any) {

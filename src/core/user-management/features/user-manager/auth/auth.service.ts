@@ -8,6 +8,7 @@ import { CreateUserDTO } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { LoginUserDTO } from './dto/login.dto';
 import { IUserTokenResponse } from './types/user-token-response.type';
+import { RepositoryService } from 'src/shared/modules/repository/repository.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
     private readonly bcryptService: BcryptService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly repoService: RepositoryService<UserModel>,
   ) {}
 
   async register(body: CreateUserDTO): Promise<IUserTokenResponse> {
@@ -25,14 +27,20 @@ export class AuthService {
     // 2) Generate Token
     const token = await this.generateToken(`${user.id}`);
 
+    delete user.password;
+
     return { user, token };
   }
 
   async login(body: LoginUserDTO): Promise<IUserTokenResponse> {
     // 1) Check If User is Exist and Password Is Correct
-    const user = await this.userService.getOneOrFail<UserModel>(TABLES.USERS, {
-      email: body.email,
-    });
+    const user = await this.repoService.getOne(
+      TABLES.USERS,
+      {
+        email: body.email,
+      },
+      { withNotFoundError: false },
+    );
     if (
       !user ||
       !(await this.bcryptService.compare(body.password, user.password))
@@ -42,6 +50,8 @@ export class AuthService {
 
     // 2) Generate Token
     const token = await this.generateToken(`${user.id}`);
+
+    delete user.password;
 
     return { user, token };
   }

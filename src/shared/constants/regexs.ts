@@ -38,3 +38,37 @@ Explanation:
 */
 export const UNIQUE_VIOLATION_REGEX =
   /Key \(([^)]+)\)=\(([^)]+)\) already exists/;
+
+// FILTERING_DATE_FORMAT_REGEX: Matches dates in the format "YYYY-MM-DDTHH:mm:ss.sssZ."
+/*
+Explanation:
+- ^: Start of the string.
+- \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z: Matches a date in the format "YYYY-MM-DDTHH:mm:ss.sssZ."
+  - \d{4}: Matches the year (four digits).
+  - -\d{2}: Matches a hyphen followed by the month (two digits).
+  - -\d{2}T: Matches a hyphen followed by the day (two digits) and the letter 'T'.
+  - \d{2}:\d{2}:\d{2}\.\d{3}: Matches the time in HH:mm:ss.sss format.
+    - \d{2}: Matches hours (two digits).
+    - :\: Matches a colon.
+    - \d{2}: Matches minutes (two digits).
+    - :\: Matches another colon.
+    - \d{2}: Matches seconds (two digits).
+    - \.\d{3}: Matches milliseconds (three digits).
+  - Z: Matches the 'Z' character that represents UTC time.
+- $: End of the string.
+*/
+export const LONG_FILTERING_DATE_FORMAT_REGEX =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
+// SHORT_FILTERING_DATE_FORMAT_REGEX: Matches dates in the format "YYYY-MM-DD."
+/*
+Explanation:
+- ^: Start of the string.
+- \d{4}: Matches the year (four digits).
+- -: Matches a hyphen.
+- \d{2}: Matches the month (two digits).
+- -: Matches another hyphen.
+- \d{2}: Matches the day (two digits).
+- $: End of the string.
+*/
+export const SHORT_FILTERING_DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;

@@ -18,6 +18,10 @@ const config: Knex.Config = {
   seeds: {
     directory: __dirname + '/src/database/seeds',
   },
+  debug: false,
+  log: {
+    debug: (query: string) => console.log(query),
+  },
 };
 
 export default config;

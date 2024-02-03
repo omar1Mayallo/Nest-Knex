@@ -1,19 +1,18 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { KNEX_CONNECTION } from 'src/database/database.provider';
 import {
   UserActionsModel,
   UserModel,
 } from 'src/shared/types/entities/user-management.model';
-import { TABLES, TableKeys } from './../../../../../shared/constants/tables';
+import { TABLES } from './../../../../../shared/constants/tables';
 import { CreateUserDTO } from './dto/create-user.dto';
 
 import { BcryptService } from 'src/core/user-management/common/modules/bcrypt/bcrypt.service';
+import { RepositoryService } from 'src/shared/modules/repository/repository.service';
+import { GetAllResponse } from 'src/shared/modules/repository/repository.types';
+import { GetAllUsersDTO } from './dto/get-users.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -21,18 +20,24 @@ export class UserService {
     @Inject(KNEX_CONNECTION)
     private readonly knex: Knex,
     private readonly bcryptService: BcryptService,
+    private readonly repoService: RepositoryService<UserModel>,
   ) {}
 
   async createUser(body: CreateUserDTO): Promise<UserModel> {
     // 1) Check If Email already exists
-    const emailExist = await this.getOneOrFail<UserModel>(TABLES.USERS, {
-      email: body.email,
-    });
+    const emailExist = await this.repoService.getOne(
+      TABLES.USERS,
+      {
+        email: body.email,
+      },
+      { withNotFoundError: false },
+    );
     if (emailExist) {
       throw new BadRequestException(
         'Email already exist, Please use another one',
       );
     }
+
     // 2) Hash the password before Inserting
     const hashedPassword = await this.bcryptService.hash(body.password);
 
@@ -45,6 +50,27 @@ export class UserService {
     return createdUser;
   }
 
+  async getAllUsers(query: GetAllUsersDTO): Promise<GetAllResponse<UserModel>> {
+    return await this.repoService.getAll(TABLES.USERS, query);
+  }
+
+  async getUser(id: number): Promise<UserModel> {
+    return await this.repoService.getOne(TABLES.USERS, { id });
+  }
+
+  async deleteUsers(ids: number[]) {
+    await this.repoService.deleteByIds(TABLES.USERS, ids);
+  }
+
+  async updatedUser(id: number, body: UpdateUserDTO) {
+    if (body.password) {
+      const hashedPassword = await this.bcryptService.hash(body.password);
+      body.password = hashedPassword;
+    }
+    return await this.repoService.updateOne(TABLES.USERS, { id }, body);
+  }
+
+  ////////////////////////////////////////////////////////////////////////
   async getLoggedUserPermissions(email: string) {
     const userPermissions = await this.knex<UserActionsModel>(
       TABLES.USER_ENTITY_ACTION,
@@ -71,36 +97,5 @@ export class UserService {
     }
     // 2-2) action as act-1 .. check it exists in userPermissions
     else return userPermissions.includes(action);
-  }
-
-  // !! TRANSPORT
-  async getOneOrFail<ITable>(
-    tableName: TableKeys,
-    conditions: Partial<ITable>,
-    options?: {
-      selectOptions?: (keyof ITable)[];
-      withSoftDeleted?: boolean;
-      withNotFoundError?: boolean;
-    },
-  ): Promise<ITable> {
-    let query = this.knex<ITable>(tableName).where(conditions);
-
-    if (options?.selectOptions) {
-      query = query.select(options.selectOptions);
-    }
-
-    if (options?.withSoftDeleted) {
-      query = query.whereNotNull('deletedAt');
-    }
-
-    const result = await query.first();
-
-    if (options?.withNotFoundError) {
-      if (!result) {
-        throw new NotFoundException('This Row Not Found');
-      }
-    }
-
-    return result as ITable;
   }
 }
