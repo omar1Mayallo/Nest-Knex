@@ -11,6 +11,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('ar_name').notNullable();
     table.string('en_name').notNullable();
     table.string('source').notNullable();
+    table.string('icon').nullable();
     table
       .string('parent_key')
       .references('module_key')

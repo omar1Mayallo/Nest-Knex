@@ -1,3 +1,4 @@
+import { PermissionsModule } from './core/user-management/features/user-manager/permissions/permissions.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigOptions } from './config/env/env.config';
@@ -12,6 +13,7 @@ import { RepositoryModule } from './shared/modules/repository/repository.module'
 
 @Module({
   imports: [
+    PermissionsModule,
     // ______ BASE_CONFIGURATIONS_MODULES ______ //
     // ENV_CONFIGURATIONS_MODULE [Global]
     ConfigModule.forRoot(ConfigOptions),

@@ -32,12 +32,19 @@ export class CustomHelpersService {
    *
    * Example:
    *  isEmpty({})           // true
+   *
    *  isEmpty([])           // true
+   *
    *  isEmpty('')           // true
+   *
    *  isEmpty(null)         // true
+   *
    *  isEmpty(undefined)    // true
+   *
    *  isEmpty('text')       // false
+   *
    *  isEmpty([1, 2, 3])    // false
+   *
    *  isEmpty({ key: 'value' }) // false
    */
   isEmpty(val: any): boolean {

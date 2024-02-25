@@ -38,7 +38,7 @@ const responseBodyFormatter = (
 ): Record<string, unknown> => {
   return {
     statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-    message: 'Validation Error',
+    error: 'ValidationException',
     errors: formattedErrors,
   };
 };

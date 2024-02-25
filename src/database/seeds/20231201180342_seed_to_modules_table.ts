@@ -1,42 +1,62 @@
+// seed_modules.ts
 import { Knex } from 'knex';
 import { TABLES } from '../../shared/constants/tables';
+import { USER_TYPE } from '../../shared/types/enums';
 
 export async function seed(knex: Knex): Promise<void> {
   await knex(TABLES.MODULE).del();
 
   await knex(TABLES.MODULE).insert([
     {
-      module_key: 'admin_panel',
+      module_key: 'admin-panel',
       en_name: 'Admin Panel',
-      ar_name: 'لوحة الادارة',
-      source: 'ADMIN_PANEL',
+      ar_name: 'لوحة التحكم للمشرف',
+      source: USER_TYPE.ADMINISTRATIVE,
     },
     {
-      module_key: 'users_management',
+      module_key: 'users-management',
       en_name: 'Users Management',
       ar_name: 'إدارة المستخدمين',
-      source: 'ADMIN_PANEL',
-      parent_key: 'admin_panel',
+      source: USER_TYPE.ADMINISTRATIVE,
+      icon: 'People', // MUI Icons Name or imageLink or ex: "path-to-public.svg"
+      parent_key: 'admin-panel',
     },
     {
-      module_key: 'billing_management',
+      module_key: 'billing-management',
       en_name: 'Billing Management',
       ar_name: 'إدارة الفواتير',
-      source: 'ADMIN_PANEL',
-      parent_key: 'admin_panel',
+      source: USER_TYPE.ADMINISTRATIVE,
+      icon: 'Note', // MUI Icons Name or imageLink or ex: "path-to-public.svg"
+      parent_key: 'admin-panel',
     },
     {
-      module_key: 'product_management',
-      en_name: 'Product Management',
+      module_key: 'products-management',
+      en_name: 'Products Management',
       ar_name: 'إدارة المنتجات',
-      source: 'ADMIN_PANEL',
-      parent_key: 'admin_panel',
+      source: USER_TYPE.ADMINISTRATIVE,
+      parent_key: 'admin-panel',
     },
     {
-      module_key: 'developers_panel',
-      en_name: 'Developers Panel',
-      ar_name: 'لوحة المطورين',
-      source: 'DEV_PANEL',
+      module_key: 'categories',
+      en_name: 'Categories',
+      ar_name: 'الفئات',
+      source: USER_TYPE.ADMINISTRATIVE,
+      icon: 'Category', // MUI Icons Name or imageLink or ex: "path-to-public.svg"
+      parent_key: 'products-management',
+    },
+    {
+      module_key: 'brands',
+      en_name: 'Brands',
+      ar_name: 'الماركات',
+      source: USER_TYPE.ADMINISTRATIVE,
+      icon: 'Category', // MUI Icons Name or imageLink or ex: "path-to-public.svg"
+      parent_key: 'categories',
+    },
+    {
+      module_key: 'portal-panel',
+      en_name: 'Portal Panel',
+      ar_name: 'لوحة البوابة',
+      source: USER_TYPE.PORTAL,
     },
   ]);
 }

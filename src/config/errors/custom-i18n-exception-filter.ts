@@ -68,7 +68,7 @@ export class CustomI18nValidationExceptionFilter extends I18nValidationException
     else if (isDatabaseError(exception)) {
       // References Of PostgreSQL Error Codes >> https://www.postgresql.org/docs/current/errcodes-appendix.html
       Logger.error('DATABASE_ERROR', exception);
-      const error = 'Database Error';
+      const error = 'DatabaseException';
 
       // @unique_violation
       if (exception.code === '23505') {
@@ -78,8 +78,8 @@ export class CustomI18nValidationExceptionFilter extends I18nValidationException
         // const formattedMessage = `This ${field} ${value} already exist`;
         const formattedMessage = `${value} already exist`;
 
-        return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-          statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          statusCode: HttpStatus.BAD_REQUEST,
           error,
           message: formattedMessage,
         });

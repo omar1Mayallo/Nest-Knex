@@ -18,6 +18,9 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { GetAllUsersDTO } from './dto/get-users.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserService } from './user.service';
+import { LoggedUser } from 'src/shared/decorators/logged-user.decorator';
+import { UserModel } from 'src/shared/types/entities/user-management.model';
+import { IsAuthenticationGuard } from 'src/shared/decorators/is-auth-guard.decorator';
 
 @UseGuards(AuthGuard)
 @Controller('users')
@@ -38,6 +41,14 @@ export class UserController {
   @ActionName(USER_ACTIONS.LIST_USERS)
   async getAllUsers(@Query() query: GetAllUsersDTO) {
     return await this.userService.getAllUsers(query);
+  }
+
+  // @DESC: Get LoggedIn User
+  // @URL: GET => "/users/logged"
+  @Get('/logged')
+  @IsAuthenticationGuard()
+  async getLoggedUser(@LoggedUser() user: UserModel) {
+    return await this.userService.getUser(user.id);
   }
 
   // @DESC: Get User
