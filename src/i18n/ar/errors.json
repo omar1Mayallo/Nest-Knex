@@ -1,0 +1,18 @@
+{
+  "Validation_Errors": {
+    "REQUIRED": "{property} مطلوب",
+    "INVALID_EMAIL": "صيغة البريد الالكتروني غير صحيحة",
+    "PASSWORD_REGEX": "صيغة كلمة السر صحيحة, يجب ان تحتوي علي حرف صغير, حرف كبير, حرف خاص, وتكون من 8 الي 25 حرف",
+    "USERNAME_REGEX": "تنسيق اسم المستخدم غير صحيح. يجب أن يحتوي فقط على أحرف، أرقام، شرطات سفلية، وحروف عربية، ويكون بين 3 و 30 حرفًا."
+  },
+
+  "Http_Errors": {
+    "INVALID_CREDENTIALS": "بيانات الولوج غير صالحة"
+  },
+
+  "Database_Errors": {},
+
+  "Other_Errors": {
+    "SOMETHING_WENT_WRONG": "حدث خطأ ما"
+  }
+}

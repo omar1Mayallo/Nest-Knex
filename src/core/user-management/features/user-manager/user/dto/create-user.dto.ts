@@ -15,32 +15,38 @@ export class CreateUserDTO {
     {},
     {
       message: i18nValidationMessage<I18nTranslations>(
-        'validation.INVALID_EMAIL',
+        'errors.Validation_Errors.INVALID_EMAIL',
       ),
     },
   )
   @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
+    message: i18nValidationMessage<I18nTranslations>(
+      'errors.Validation_Errors.REQUIRED',
+    ),
   })
   email: string;
 
   @Matches(PASSWORD_REGEX, {
     message: i18nValidationMessage<I18nTranslations>(
-      'validation.PASSWORD_REGEX',
+      'errors.Validation_Errors.PASSWORD_REGEX',
     ),
   })
   @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
+    message: i18nValidationMessage<I18nTranslations>(
+      'errors.Validation_Errors.REQUIRED',
+    ),
   })
   password: string;
 
   @Matches(USERNAME_REGEX, {
     message: i18nValidationMessage<I18nTranslations>(
-      'validation.USERNAME_REGEX',
+      'errors.Validation_Errors.USERNAME_REGEX',
     ),
   })
   @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
+    message: i18nValidationMessage<I18nTranslations>(
+      'errors.Validation_Errors.REQUIRED',
+    ),
   })
   username: string;
 

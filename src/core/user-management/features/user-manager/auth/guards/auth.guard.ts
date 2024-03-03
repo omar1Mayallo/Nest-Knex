@@ -2,17 +2,17 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { JwtService } from 'src/core/user-management/common/modules/jwt/jwt.service';
 import { TABLES } from 'src/shared/constants/tables';
-import { UserModel } from 'src/shared/types/entities/user-management.model';
-import { UserService } from '../../user/user.service';
 import { RepositoryService } from 'src/shared/modules/repository/repository.service';
+import { UserModel } from 'src/shared/types/entities/user-management.model';
+import { PermissionsService } from '../../permissions/permissions.service';
 
 export interface AuthRequest extends Request {
   user: UserModel;
@@ -22,7 +22,7 @@ export interface AuthRequest extends Request {
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userService: UserService,
+    private readonly permissionsService: PermissionsService,
     private readonly reflector: Reflector,
     private readonly repoService: RepositoryService<UserModel>,
   ) {}
@@ -81,7 +81,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // 6) Authorization check
-    const isUserHaveAccess = await this.userService.verifyPermissions(
+    const isUserHaveAccess = await this.permissionsService.verifyPermissions(
       loggedUser.email,
       actionName,
     );

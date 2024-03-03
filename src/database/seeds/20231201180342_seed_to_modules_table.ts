@@ -49,7 +49,7 @@ export async function seed(knex: Knex): Promise<void> {
       en_name: 'Brands',
       ar_name: 'الماركات',
       source: USER_TYPE.ADMINISTRATIVE,
-      icon: 'Category', // MUI Icons Name or imageLink or ex: "path-to-public.svg"
+      icon: 'BrandingWatermark', // MUI Icons Name or imageLink or ex: "path-to-public.svg"
       parent_key: 'categories',
     },
     {

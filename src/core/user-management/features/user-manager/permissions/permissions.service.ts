@@ -8,6 +8,7 @@ import {
   ModuleProps,
 } from './types/permissions.types';
 import { CustomHelpersService } from 'src/shared/modules/custom-helpers/custom-helpers.service';
+import { UserActionsModel } from 'src/shared/types/entities/user-management.model';
 
 @Injectable()
 export class PermissionsService {
@@ -23,6 +24,35 @@ export class PermissionsService {
       throw new UnauthorizedException("User don't have permissions");
     }
     return this.buildPermissionsTree(userPermissions);
+  }
+
+  async getLoggedUserActions(email: string) {
+    const userActions = await this.knex<UserActionsModel>(
+      TABLES.USER_ENTITY_ACTION,
+    )
+      .where({ email })
+      .select('action_key')
+      .pluck('action_key');
+
+    return userActions;
+  }
+
+  async verifyPermissions(
+    email: string,
+    action: string | string[],
+  ): Promise<boolean> {
+    // 1) Get Current User Permissions (or Actions)
+    const userActions = await this.getLoggedUserActions(email);
+
+    // 2) verify action(s) in User Permissions
+    if (Array.isArray(action)) {
+      // 2-1) action as [act-1, act-2, act-3] .. check at least one in userActions
+      return userActions.some((userAction: string) =>
+        action.includes(userAction),
+      );
+    }
+    // 2-2) action as act-1 .. check it exists in userActions
+    else return userActions.includes(action);
   }
 
   // ____________________ PRIVATE ____________________ //

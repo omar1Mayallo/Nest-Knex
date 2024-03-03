@@ -24,4 +24,11 @@ export class PermissionsController {
   async getLoggedUserPermissions(@LoggedUser() user: UserModel) {
     return await this.permissionService.getLoggedUserPermissions(user.email);
   }
+
+  // @DESC: GET All Logged User Permissions
+  // @URL: GET => "/permissions/logged-user-actions"
+  @Get('/logged-user-actions')
+  async getLoggedUserActions(@LoggedUser() user: UserModel) {
+    return await this.permissionService.getLoggedUserActions(user.email);
+  }
 }

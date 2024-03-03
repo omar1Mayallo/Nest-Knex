@@ -5,24 +5,28 @@ import { PASSWORD_REGEX } from 'src/shared/constants/regexs';
 
 export class LoginUserDTO {
   @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
+    message: i18nValidationMessage<I18nTranslations>(
+      'errors.Validation_Errors.REQUIRED',
+    ),
   })
   @IsEmail(
     {},
     {
       message: i18nValidationMessage<I18nTranslations>(
-        'validation.INVALID_EMAIL',
+        'errors.Validation_Errors.INVALID_EMAIL',
       ),
     },
   )
   email: string;
 
   @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
+    message: i18nValidationMessage<I18nTranslations>(
+      'errors.Validation_Errors.REQUIRED',
+    ),
   })
   @Matches(PASSWORD_REGEX, {
     message: i18nValidationMessage<I18nTranslations>(
-      'validation.PASSWORD_REGEX',
+      'errors.Validation_Errors.PASSWORD_REGEX',
     ),
   })
   password: string;

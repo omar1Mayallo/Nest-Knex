@@ -1,10 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { KNEX_CONNECTION } from 'src/database/database.provider';
-import {
-  UserActionsModel,
-  UserModel,
-} from 'src/shared/types/entities/user-management.model';
+import { UserModel } from 'src/shared/types/entities/user-management.model';
 import { TABLES } from './../../../../../shared/constants/tables';
 import { CreateUserDTO } from './dto/create-user.dto';
 
@@ -68,34 +65,5 @@ export class UserService {
       body.password = hashedPassword;
     }
     return await this.repoService.updateOne(TABLES.USERS, { id }, body);
-  }
-
-  ////////////////////////////////////////////////////////////////////////
-  async getLoggedUserPermissions(email: string) {
-    const userPermissions = await this.knex<UserActionsModel>(
-      TABLES.USER_ENTITY_ACTION,
-    )
-      .where({ email })
-      .select('action_key')
-      .pluck('action_key');
-
-    return userPermissions;
-  }
-  async verifyPermissions(
-    email: string,
-    action: string | string[],
-  ): Promise<boolean> {
-    // 1) Get Current User Permissions (or Actions)
-    const userPermissions = await this.getLoggedUserPermissions(email);
-
-    // 2) verify action(s) in User Permissions
-    if (Array.isArray(action)) {
-      // 2-1) action as [act-1, act-2, act-3] .. check at least one in userPermissions
-      return userPermissions.some((userAction: string) =>
-        action.includes(userAction),
-      );
-    }
-    // 2-2) action as act-1 .. check it exists in userPermissions
-    else return userPermissions.includes(action);
   }
 }

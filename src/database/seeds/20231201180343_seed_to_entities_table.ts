@@ -75,6 +75,7 @@ export async function seed(knex: Knex): Promise<void> {
       ar_name: 'الملابس',
       entity_url: 'products-management/categories/clothes',
       order: 7,
+      icon: 'clothes.webp',
     },
     {
       module_key: 'categories',
@@ -83,6 +84,7 @@ export async function seed(knex: Knex): Promise<void> {
       ar_name: 'الاحذية',
       entity_url: 'products-management/categories/shoes',
       order: 8,
+      icon: 'shoes.webp',
     },
     {
       module_key: 'brands',
@@ -91,6 +93,7 @@ export async function seed(knex: Knex): Promise<void> {
       ar_name: 'اديداس',
       entity_url: 'products-management/categories/brands/adidas',
       order: 9,
+      icon: 'nike.webp',
     },
     {
       module_key: 'brands',
@@ -99,6 +102,7 @@ export async function seed(knex: Knex): Promise<void> {
       ar_name: 'نايكي',
       entity_url: 'products-management/categories/brands/nike',
       order: 10,
+      icon: 'nike.webp',
     },
 
     {

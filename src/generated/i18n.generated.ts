@@ -2,11 +2,20 @@
 
 import { Path } from "nestjs-i18n";
 export type I18nTranslations = {
-    "validation": {
-        "NOT_EMPTY": string;
-        "INVALID_EMAIL": string;
-        "PASSWORD_REGEX": string;
-        "USERNAME_REGEX": string;
+    "errors": {
+        "Validation_Errors": {
+            "REQUIRED": string;
+            "INVALID_EMAIL": string;
+            "PASSWORD_REGEX": string;
+            "USERNAME_REGEX": string;
+        };
+        "Http_Errors": {
+            "INVALID_CREDENTIALS": string;
+        };
+        "Database_Errors": {};
+        "Other_Errors": {
+            "SOMETHING_WENT_WRONG": string;
+        };
     };
 };
 export type I18nPath = Path<I18nTranslations>;

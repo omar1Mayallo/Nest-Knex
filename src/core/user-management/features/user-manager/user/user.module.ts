@@ -3,7 +3,7 @@ import { BcryptModule } from 'src/core/user-management/common/modules/bcrypt/bcr
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
-@Global()
+
 @Module({
   imports: [BcryptModule],
   controllers: [UserController],
