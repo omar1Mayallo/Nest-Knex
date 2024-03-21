@@ -1,14 +1,15 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Knex } from 'knex';
 import { KNEX_CONNECTION } from 'src/database/database.provider';
+import { CustomHelpersService } from 'src/shared/modules/custom-helpers/custom-helpers.service';
+import { UserActionsModel } from 'src/shared/types/entities/user-management.model';
+import { USER_TYPE } from 'src/shared/types/enums';
 import { TABLES } from './../../../../../shared/constants/tables';
 import {
   EntityProps,
   IPermission,
   ModuleProps,
 } from './types/permissions.types';
-import { CustomHelpersService } from 'src/shared/modules/custom-helpers/custom-helpers.service';
-import { UserActionsModel } from 'src/shared/types/entities/user-management.model';
 
 @Injectable()
 export class PermissionsService {
@@ -18,12 +19,24 @@ export class PermissionsService {
     private readonly helpers: CustomHelpersService,
   ) {}
 
-  async getLoggedUserPermissions(email: string) {
+  async getLoggedUserPermissions(email: string, type: USER_TYPE) {
+    const { MODULE } = TABLES;
     const userPermissions = await this.getPermissionsByEmail(email);
+    const baseModule: Pick<IPermission, ModuleProps> = await this.knex
+      .from(MODULE)
+      .select({
+        module_key: `${MODULE}.module_key`,
+        module_ar_name: `${MODULE}.ar_name`,
+        module_en_name: `${MODULE}.en_name`,
+        module_parent_key: `${MODULE}.parent_key`,
+        module_source: `${MODULE}.source`,
+      })
+      .where({ source: type })
+      .first();
     if (this.helpers.isEmpty(userPermissions)) {
       throw new UnauthorizedException("User don't have permissions");
     }
-    return this.buildPermissionsTree(userPermissions);
+    return this.buildPermissionsTree(userPermissions, baseModule);
   }
 
   async getLoggedUserActions(email: string) {
@@ -58,7 +71,7 @@ export class PermissionsService {
   // ____________________ PRIVATE ____________________ //
   private async getPermissionsByEmail(email: string): Promise<IPermission[]> {
     const { MODULE, ENTITY, ENTITY_ACTION, USER_ENTITY_ACTION } = TABLES;
-    const permissions: IPermission[] = await this.knex
+    const userPermissions: IPermission[] = await this.knex
       .select({
         module_key: `${MODULE}.module_key`,
         module_ar_name: `${MODULE}.ar_name`,
@@ -93,10 +106,14 @@ export class PermissionsService {
         [`${USER_ENTITY_ACTION}.email`]: email,
       })
       .orderBy(`${ENTITY}.order`, 'asc');
-    return permissions;
+
+    return userPermissions;
   }
 
-  private buildPermissionsTree(permissions: IPermission[]) {
+  private buildPermissionsTree(
+    permissions: IPermission[],
+    baseModule: Pick<IPermission, ModuleProps>,
+  ) {
     // 1) Prepare Modules, Entities and Actions Properties
     const {
       groupedActions,
@@ -106,13 +123,11 @@ export class PermissionsService {
 
     // 2) Split Modules and Entities
     // ______________MAIN_MODULE__________________ //
-    const mainModule = permissions.find(
-      (item) => item.module_parent_key === null,
-    );
+    const mainModule = baseModule;
 
     //_____________ ([1st]_LEVEL)_ENTITIES_&_MODULES _____________//
     const firstLevelEntities = this.aggregateEntitiesFromModule(undefined, {
-      permissions: permissions,
+      permissions,
       mainModule,
     });
     const {
@@ -300,7 +315,10 @@ export class PermissionsService {
 
   private aggregateEntitiesFromModule(
     nestedModules?: IPermission[],
-    forMainModule?: { permissions: IPermission[]; mainModule: IPermission },
+    forMainModule?: {
+      permissions: IPermission[];
+      mainModule: Pick<IPermission, ModuleProps>;
+    },
   ) {
     // Modules Entities (for the main module and nested modules)
     let entities: IPermission[] = [];
@@ -332,7 +350,7 @@ export class PermissionsService {
   private aggregateSubModulesFromParentModule(
     permissions: IPermission[],
     aggregatedParentModules?: Pick<IPermission, ModuleProps>[],
-    mainModule?: IPermission,
+    mainModule?: Pick<IPermission, ModuleProps>,
   ) {
     let subModules: IPermission[] = [];
     if (mainModule) {

@@ -7,4 +7,10 @@ export class GetAllUsersDTO extends CustomReqQueryDTO {
 
   @IsOptional()
   deleted_at: string | object;
+
+  @IsOptional()
+  status: string | object;
+
+  @IsOptional()
+  type: string | object;
 }

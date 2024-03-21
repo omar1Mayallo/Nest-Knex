@@ -300,7 +300,8 @@ export class RepositoryService<Model> {
         }
         // [2-3] Handle Non-date simple filtering
         else {
-          queryBuilder.where(key, value);
+          const values = value.split(',').map((val: string) => val.trim());
+          queryBuilder.where(key, 'IN', values);
         }
       }
     });
